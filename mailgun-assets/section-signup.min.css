@@ -1,0 +1,3 @@
+.section-signup .marquee{--sinch-marquee-animation-duration:40s}.section-signup .marquee img{--sinch-border-color:var(
+      --sinch-neutral-hover-border-color
+  )}@media (min-width:1200px){.section-signup .section-signup-wide{max-width:1480px}.section-signup .section-signup-wide .section-signup-marquee{position:absolute;top:0;bottom:0;right:0;left:calc(50% + 1264px / 12);margin-right:-5rem;margin-left:5rem}.section-signup .section-signup-wide .section-signup-marquee .marquee{--sinch-marquee-animation-duration:40s}}@media (max-width:1199.98px){.section-signup .section-signup-wide{padding-bottom:0!important}.section-signup .section-signup-wide .marquee{margin-bottom:-3.5rem}}

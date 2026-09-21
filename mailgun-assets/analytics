@@ -1,0 +1,30 @@
+
+function piResponse() {
+		piSetCookie('visitor_id830283', '775597363', 3650);
+			piSetCookie('visitor_id830283-hash', 'a63f700e72bd4bc8dbfb1e31962a69d0a2cdef7af19cef259b65b92f2f67005d384c0516f31bc26474aedc9a9f47f0459f558cee', 3650);
+		
+		if (document.location.protocol != "https:" || (document.location.protocol == "https:" && true)) {
+		var analytics_link = document.location.protocol + "//" + "hello.learn.mailgun.com/analytics?";
+		pi.tracker.visitor_id='775597363';
+
+				pi.tracker.visitor_id_sign='a63f700e72bd4bc8dbfb1e31962a69d0a2cdef7af19cef259b65b92f2f67005d384c0516f31bc26474aedc9a9f47f0459f558cee';
+		
+				pi.tracker.campaign_id='2995';
+		
+		var variables = 'conly=true';
+		for (property in pi.tracker) {
+					variables += "&" + property + "=" + pi.tracker[property];
+				}
+		var headID = document.getElementsByTagName("head")[0];
+		piScriptObj[piScriptNum] = document.createElement('script');
+		piScriptObj[piScriptNum].type = 'text/javascript';
+		piScriptObj[piScriptNum].src = analytics_link + variables;
+		headID.appendChild(piScriptObj[piScriptNum]);
+		piScriptObj[piScriptNum].onload = function() { return; }
+	}
+	}
+piResponse();
+
+
+
+
