@@ -126,36 +126,36 @@
   .field input[readonly]:focus{outline:none;}
   .password-input-wrap{position:relative;}
   .password-input-wrap input{padding-right:44px;}
-  .password-hint{
-    font-size:13px;
-    color:var(--text-muted);
-    margin:8px 0 0;
-    line-height:1.5;
-    display:flex;
+  .field.has-error .password-input-wrap input{border-color:#E5484D;}
+  .field.has-error .password-label{color:#E5484D;}
+  .password-weak-msg{
+    display:none;
     align-items:center;
-    gap:8px;
+    gap:6px;
+    font-size:13px;
+    color:#E5484D;
+    margin:8px 0 0;
   }
-  .field.has-error .password-hint{display:none;}
-  .hint-dot{
-    width:8px;
-    height:8px;
-    border-radius:50%;
-    background:var(--border-strong);
-    flex-shrink:0;
-    position:relative;
+  .field.has-error .password-weak-msg{display:flex;}
+  .password-rules-box{
+    display:none;
+    border:1px solid var(--border-strong);
+    border-radius:8px;
+    padding:14px 16px;
+    margin-top:12px;
+    font-size:13px;
+    color:var(--text);
   }
-  .hint-dot.met{background:transparent;}
-  .hint-dot.met::before{
-    content:"";
-    position:absolute;
-    left:1px;
-    top:2px;
-    width:6px;
-    height:3px;
-    border-left:1.5px solid #2E8A47;
-    border-bottom:1.5px solid #2E8A47;
-    transform:rotate(-45deg);
-  }
+  .password-rules-box.revealed{display:block;}
+  .password-rules-box .rules-title{font-weight:600;margin:0 0 8px;font-size:13px;}
+  .pw-rules,.pw-subrules{list-style:none;margin:0;padding:0;}
+  .pw-subrules{padding-left:20px;margin-top:4px;}
+  .pw-rule{display:flex;align-items:flex-start;gap:7px;margin-bottom:6px;line-height:1.4;}
+  .pw-rule:last-child{margin-bottom:0;}
+  .pw-mark{flex-shrink:0;width:12px;color:var(--text-muted);font-weight:700;}
+  .pw-rule-content{flex:1;}
+  .pw-rule.met{color:#2E8A47;}
+  .pw-rule.met .pw-mark{color:#2E8A47;}
   .password-toggle{
     position:absolute;
     right:10px;
@@ -570,6 +570,11 @@
       <p class="sub">No commitment. No hidden fees.</p>
 
       <form id="signup-form" novalidate>
+        <div class="field" id="email-field">
+          <label for="work-email">Work email</label>
+          <input id="work-email" type="email">
+          <p class="field-error" id="email-error"><span class="error-icon"></span>Invalid email</p>
+        </div>
         <div class="field" id="full-name-field">
           <label for="full-name">Full name</label>
           <input id="full-name" type="text">
@@ -579,11 +584,6 @@
           <label for="company">Company</label>
           <input id="company" type="text">
           <p class="field-error"><span class="error-icon"></span>This field is required</p>
-        </div>
-        <div class="field" id="email-field">
-          <label for="work-email">Work email</label>
-          <input id="work-email" type="email">
-          <p class="field-error" id="email-error"><span class="error-icon"></span>Invalid email</p>
         </div>
         <button type="submit" class="cta-primary">Continue</button>
       </form>
@@ -641,8 +641,9 @@
         <input id="confirmed-email" type="text" readonly>
       </div>
       <div class="field" id="password-field">
+        <label for="new-password" class="password-label" id="password-label">Password*</label>
         <div class="password-input-wrap">
-          <input id="new-password" type="password" placeholder="Choose a password *">
+          <input id="new-password" type="password">
           <button type="button" class="password-toggle" id="password-toggle" aria-label="Show password">
             <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path d="M1.5 10S4.5 4 10 4s8.5 6 8.5 6-3 6-8.5 6-8.5-6-8.5-6Z" stroke="#626C73" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
@@ -650,11 +651,22 @@
             </svg>
           </button>
         </div>
-        <p class="password-hint" id="password-hint">
-          <span class="hint-dot" id="hint-dot"></span>
-          <span>At least 12 characters.</span>
-        </p>
-        <p class="field-error" id="password-error"><span class="error-icon"></span>Password must be at least 12 characters.</p>
+        <p class="password-weak-msg" id="password-weak-msg"><span class="error-icon"></span>The password is too weak</p>
+        <div class="password-rules-box" id="password-rules-box">
+          <p class="rules-title">Your password must contain:</p>
+          <ul class="pw-rules">
+            <li class="pw-rule" id="rule-length"><span class="pw-mark">•</span>At least 12 characters</li>
+            <li class="pw-rule" id="rule-threeof"><span class="pw-mark">•</span><div class="pw-rule-content">At least 3 of the following:
+              <ul class="pw-subrules">
+                <li class="pw-rule" id="rule-lower"><span class="pw-mark">•</span>Lower case letters (a-z)</li>
+                <li class="pw-rule" id="rule-upper"><span class="pw-mark">•</span>Upper case letters (A-Z)</li>
+                <li class="pw-rule" id="rule-number"><span class="pw-mark">•</span>Numbers (0-9)</li>
+                <li class="pw-rule" id="rule-special"><span class="pw-mark">•</span>Special characters (e.g. !@#$%^&*)</li>
+              </ul>
+            </div></li>
+            <li class="pw-rule" id="rule-norepeat"><span class="pw-mark">•</span>No more than 2 identical characters in a row</li>
+          </ul>
+        </div>
       </div>
 
       <button class="cta-primary" id="cta-create-account">
@@ -926,14 +938,50 @@ document.getElementById('password-toggle').addEventListener('click', () => {
   btn.setAttribute('aria-label', showing ? 'Show password' : 'Hide password');
 });
 
+function computePasswordRules(value){
+  const hasLength = value.length >= 12;
+  const hasLower = /[a-z]/.test(value);
+  const hasUpper = /[A-Z]/.test(value);
+  const hasNumber = /[0-9]/.test(value);
+  const hasSpecial = /[!@#$%^&*(),.?":{}|<>_\-+=~`\[\];'/\\]/.test(value);
+  const classesMet = [hasLower, hasUpper, hasNumber, hasSpecial].filter(Boolean).length;
+  const threeOfFour = classesMet >= 3;
+  const noRepeat = !/(.)\1\1/.test(value);
+  return {
+    hasLength, hasLower, hasUpper, hasNumber, hasSpecial, threeOfFour, noRepeat,
+    overall: hasLength && threeOfFour && noRepeat
+  };
+}
+
+function renderPasswordRules(value){
+  const r = computePasswordRules(value);
+  const setRule = (id, met) => {
+    const el = document.getElementById(id);
+    el.classList.toggle('met', met);
+    el.querySelector('.pw-mark').textContent = met ? '✓' : '•';
+  };
+  setRule('rule-length', r.hasLength);
+  setRule('rule-threeof', r.threeOfFour);
+  setRule('rule-lower', r.hasLower);
+  setRule('rule-upper', r.hasUpper);
+  setRule('rule-number', r.hasNumber);
+  setRule('rule-special', r.hasSpecial);
+  setRule('rule-norepeat', r.noRepeat);
+  return r;
+}
+
 document.getElementById('new-password').addEventListener('input', () => {
   const field = document.getElementById('password-field');
-  const met = document.getElementById('new-password').value.length >= 12;
-  document.getElementById('hint-dot').classList.toggle('met', met);
-  if(met){
-    field.classList.remove('has-error');
-  }
+  const rulesBox = document.getElementById('password-rules-box');
+  const value = document.getElementById('new-password').value;
+
+  rulesBox.classList.add('revealed');
+
+  const r = renderPasswordRules(value);
+  field.classList.toggle('has-error', !r.overall);
 });
+
+renderPasswordRules('');
 
 async function sha1Hex(text){
   const buf = await crypto.subtle.digest('SHA-1', new TextEncoder().encode(text));
@@ -957,12 +1005,11 @@ async function isPasswordBreached(password){
 document.getElementById('cta-create-account').addEventListener('click', async () => {
   const pw = document.getElementById('new-password').value;
   const field = document.getElementById('password-field');
-  const errorEl = document.getElementById('password-error');
   const label = document.getElementById('create-account-label');
   const button = document.getElementById('cta-create-account');
 
-  if(pw.length < 12){
-    errorEl.innerHTML = '<span class="error-icon"></span>Password must be at least 12 characters.';
+  const r = computePasswordRules(pw);
+  if(!r.overall){
     field.classList.add('has-error');
     return;
   }
@@ -977,8 +1024,8 @@ document.getElementById('cta-create-account').addEventListener('click', async ()
   label.textContent = 'Continue';
 
   if(breached){
-    errorEl.innerHTML = '<span class="error-icon"></span>This password has appeared in a data breach. Please choose another.';
     field.classList.add('has-error');
+    document.getElementById('password-weak-msg').innerHTML = '<span class="error-icon"></span>This password has appeared in a data breach. Please choose another.';
     return;
   }
 
